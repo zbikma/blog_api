@@ -7,17 +7,18 @@ on:
 jobs:
   link-issues:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+
     steps:
       - name: Check out the repository
         uses: actions/checkout@v2
 
-      - name: Link Issues Based on Branch or PR Title
+      - name: Link Issues Based on PR Title
         run: |
-          ISSUE_KEY=$(echo "${{ github.head_ref }}" | grep -Eo '[A-Z]+-[0-9]+') || true
-          if [ -z "$ISSUE_KEY" ]; then
-            ISSUE_KEY=$(echo "${{ github.event.pull_request.title }}" | grep -Eo '[A-Z]+-[0-9]+') || true
-          fi
-
+          ISSUE_KEY=$(echo "${{ github.event.pull_request.title }}" | grep -Eo '[A-Za-z]+-[#0-9]+') || true
+          
           if [ ! -z "$ISSUE_KEY" ]; then
             echo "Found issue key: $ISSUE_KEY"
             curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
@@ -25,6 +26,5 @@ jobs:
                  -d "{\"body\": \"Linked to $ISSUE_KEY\"}" \
                  ${{ github.event.pull_request.issue_url }}
           else
-            echo "No issue key found in branch name or PR title."
+            echo "No issue key found in PR title."
           fi
-
