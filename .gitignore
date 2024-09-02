@@ -22,3 +22,5 @@ tmp/
 # Ignore Python bytecode and cache
 __pycache__/
 *.pyc
+
+.DS_Store
