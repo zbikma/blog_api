@@ -43,6 +43,19 @@ def delete_blog_post(id):
         'message': 'Post was deleted successfully'
         }),200
 
+@app.route('/api/blog_posts/<int:id>',methods=['PUT'])
+def update_blog_post(id):
+    post = BlogPost.query.get(id)
+    if post is None:
+        return jsonify({'error':'Blog post does not exist!'}),404
+    
+    data = request.get_json()
+    post.title = data.get('title', post.title)
+    post.content = data.get('content', post.content)
+    post.author = data.get('author', post.author)
+    db.session.commit()
+    return jsonify({'message': 'Blog post updated successfully'}),200
+
 
 if __name__ =='__main__':
     app.run(debug=True)

@@ -62,5 +62,30 @@ class BlogPostAPITestCase(unittest.TestCase):
         deleted_post = BlogPost.query.get(blog_post.id)
         self.assertIsNone(deleted_post)
         
+    def test_modify_blog_post(self):
+        
+        blog_post= BlogPost(title="test post",author="test author",content=" this is a blog to be deleted")
+        db.session.add(blog_post)
+        db.session.commit()
+        # create the update request
+        # New data for update
+        updated_data = {
+        'title': "New Title",
+        'content': "New Content",
+        'author': "New Author"
+        }
+        response = self.app.put(f'/api/blog_posts/{blog_post.id}',json=updated_data)
+        # Check that the request was successful (status code 201 Created)
+        self.assertEqual(response.status_code,200)
+        # verify the response contains correct data
+       
+        self.assertEqual(response.get_json(), {'message': 'Blog post updated successfully'})
+
+        # Verify the post was updated
+        updated_post = BlogPost.query.get(blog_post.id)
+        self.assertEqual(updated_post.title, "New Title")
+        self.assertEqual(updated_post.content, "New Content")
+        self.assertEqual(updated_post.author, "New Author")
+        
 if __name__ == '__main__':
     unittest.main()
