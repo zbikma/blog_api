@@ -29,6 +29,19 @@ def create_blog_post():
         'content': new_post.content,
         'author': new_post.author
     }), 201
+    
+@app.route('/api/blog_posts/<int:id>',methods=['DELETE'])
+def delete_blog_post(id):
+    post = BlogPost.query.get(id)
+    if post is None:
+        return jsonify({
+            'error': 'Blog post does not exist!'
+        }),404
+    db.session.delete(post)
+    db.session.commit()
+    return jsonify({
+        'message': 'Post was deleted successfully'
+        }),200
 
 
 if __name__ =='__main__':

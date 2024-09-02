@@ -47,5 +47,20 @@ class BlogPostAPITestCase(unittest.TestCase):
         self.assertEqual(data['content'],'this is a new blog post about how flat an organization must be')
         self.assertEqual(data['author'],'Test Author')
         
+    def test_delete_blog_post(self):
+        
+        blog_post= BlogPost(title="test post",author="test author",content=" this is a blog to be deleted")
+        db.session.add(blog_post)
+        db.session.commit()
+        # create the delete request
+        response = self.app.delete(f'/api/blog_posts/{blog_post.id}')
+        # Check that the request was successful (status code 201 Created)
+        self.assertEqual(response.status_code,200)
+        # verify the response contains correct data
+       
+        self.assertEqual(response.get_json(),{'message':'Post was deleted successfully'})
+        deleted_post = BlogPost.query.get(blog_post.id)
+        self.assertIsNone(deleted_post)
+        
 if __name__ == '__main__':
     unittest.main()
