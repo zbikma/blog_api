@@ -15,17 +15,17 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v2
 
-      - name: Link Issues Based on PR Title
+      - name: Link Issues Based on Branch or PR Title
         run: |
+          # Check branch name first
+          ISSUE_KEY=$(echo "${{ github.head_ref }}" | grep -Eo '[A-Za-z]+-[#0-9]+') || true
 
-          ISSUE_KEY=$(echo "${{ github.event.pull_request.title }}" | grep -Eo '[A-Za-z]+-[#0-9]+') || true
-          
-
+          # If not found in branch name, check the PR title
           if [ -z "$ISSUE_KEY" ]; then
             ISSUE_KEY=$(echo "${{ github.event.pull_request.title }}" | grep -Eo '[A-Za-z]+-[#0-9]+') || true
           fi
 
-
+          # If an issue key is found, link it to the pull request
           if [ ! -z "$ISSUE_KEY" ]; then
             echo "Found issue key: $ISSUE_KEY"
             curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
@@ -33,5 +33,5 @@ jobs:
                  -d "{\"body\": \"Linked to $ISSUE_KEY\"}" \
                  ${{ github.event.pull_request.issue_url }}
           else
-            echo "No issue key found in PR title."
+            echo "No issue key found in branch name or PR title."
           fi
