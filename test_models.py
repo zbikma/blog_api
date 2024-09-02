@@ -40,5 +40,7 @@ class ModelTestCase(unittest.TestCase):
         self.assertEqual(out_comment.post_id ,post.id)
         self.assertEqual(out_comment.content,"This is a test comment on Test Post")
         
+        
+        
 if __name__ == '__main__':
     unittest.main()
