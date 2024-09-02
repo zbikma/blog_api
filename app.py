@@ -2,7 +2,7 @@ from flask import Flask,jsonify,request
 from models import db,BlogPost,Comment
 
 app = Flask(__name__)
-something="this is a test"
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']= False
 
