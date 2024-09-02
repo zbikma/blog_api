@@ -13,9 +13,9 @@ jobs:
 
       - name: Link Issues Based on Branch or PR Title
         run: |
-          ISSUE_KEY=$(echo "${{ github.head_ref }}" | grep -Eo '[A-Z]+-[0-9]+') || true
+          ISSUE_KEY=$(echo "${{ github.head_ref }}" | grep -Eo '[A-Za-z]+-[#0-9]+') || true
           if [ -z "$ISSUE_KEY" ]; then
-            ISSUE_KEY=$(echo "${{ github.event.pull_request.title }}" | grep -Eo '[A-Z]+-[0-9]+') || true
+            ISSUE_KEY=$(echo "${{ github.event.pull_request.title }}" | grep -Eo '[A-Za-z]+-[#0-9]+') || true
           fi
 
           if [ ! -z "$ISSUE_KEY" ]; then
@@ -27,4 +27,3 @@ jobs:
           else
             echo "No issue key found in branch name or PR title."
           fi
-
